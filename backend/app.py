@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from config import Config
-from extensions import db 
+from extensions import db ,jwt
 from models import Producto 
 from routes import register_routes # 🚨 Importamos la función de registro de rutas 🚨
 

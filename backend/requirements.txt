@@ -1,3 +1,7 @@
 Flask
 Flask_cors
 flask_sqlalchemy
+Flask-JWT-Extended
+google-auth
+google-auth-oauthlib
+requests
