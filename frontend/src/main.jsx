@@ -2,6 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { CartProvider } from "./CartContext.jsx"; // ⬅️ Correcto: importado
+import CartView from "./CartView.jsx";
 
 // 1. Importamos React Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -24,13 +26,23 @@ const router = createBrowserRouter([
     path: "/admin",
     element: <AdminPanel />, // Ruta del panel: http://localhost:5173/admin
   },
+  {
+    path: "/carrito", // ⬅️ NUEVA RUTA
+    element: <CartView />, // ⬅️ VISTA DEL CARRITO
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    {/* 🚨 4. Envolvemos toda la aplicación con el Provider de Google */}
+        {/* 🚨 4. Envolvemos toda la aplicación con el Provider de Google */}
+       {" "}
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      <RouterProvider router={router} />
+      {/* 🟢 CORRECCIÓN: CartProvider debe envolver al RouterProvider */}
+      <CartProvider>
+              <RouterProvider router={router} />
+      </CartProvider>
+         {" "}
     </GoogleOAuthProvider>
+     {" "}
   </StrictMode>
 );

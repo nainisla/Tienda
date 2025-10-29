@@ -2,15 +2,10 @@ import React, { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-// 🚨 Nota: Reemplazamos 'Link' con 'a' para simplificar las dependencias internas del modal.
-// import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 
-// El componente recibe dos props:
-// 1. show: Un booleano que indica si se debe mostrar el modal.
-// 2. handleClose: Una función para cerrar el modal (actualiza el estado en App.jsx).
-const LoginModal = ({ show, handleClose }) => {
+const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,10 +24,15 @@ const LoginModal = ({ show, handleClose }) => {
 
     console.log("Intentando login tradicional con:", { email, password });
 
-    // 🚨 Llamada a la API Flask para Login tradicional
     axios
       .post("http://127.0.0.1:5000/auth/login", { email, password })
       .then((res) => {
+        localStorage.setItem("userToken", res.data.access_token); // ⬅️ GUARDAR TOKEN
+        localStorage.setItem("userRole", res.data.role);
+        setIsLoggedIn(true); // ⬅️ Actualizar estado de App.jsx
+        setUserRole(res.data.role); // ⬅️ Actualizar rol
+        handleClose(); // Cerrar modal
+        console.log("Login tradicional exitoso:", res.data);
         // Manejo exitoso: almacenar token, actualizar estado de autenticación.
         console.log("Login exitoso:", res.data);
         // localStorage.setItem('userToken', res.data.access_token);
@@ -65,9 +65,11 @@ const LoginModal = ({ show, handleClose }) => {
         token: googleToken,
       })
       .then((res) => {
-        // Manejo exitoso: almacenar token de la app, actualizar estado.
-        console.log("Respuesta del Backend de Flask:", res.data);
-        // localStorage.setItem('userToken', res.data.access_token);
+        localStorage.setItem("userToken", res.data.access_token); // ⬅️ GUARDAR TOKEN
+        localStorage.setItem("userRole", res.data.role);
+        setIsLoggedIn(true); // ⬅️ Actualizar estado de App.jsx
+        setUserRole(res.data.role); // ⬅️ Actualizar rol
+        console.log("Login con Google exitoso:", res.data);
         handleClose(); // Cerrar el modal al iniciar sesión
       })
       .catch((err) => {

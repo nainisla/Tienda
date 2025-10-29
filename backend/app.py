@@ -47,6 +47,7 @@ def create_app(config_class=Config):
     
     # 2. Inicializar extensiones
     db.init_app(app) # ⬅️ Vinculamos la instancia 'db' a la aplicación 'app'
+    jwt.init_app(app)
     
     # 3. Registrar las Rutas y Crear Tablas
     with app.app_context():
