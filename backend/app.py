@@ -40,7 +40,23 @@ def inicializar_db(app):
 # --- Función para crear la instancia de la aplicación (Patrón de Fábrica) ---
 def create_app(config_class=Config):
     app = Flask(__name__)
-    CORS(app) 
+    @app.after_request
+    def add_security_headers(response):
+        # Permite el uso de la API de gestión de credenciales (usada por Google/navegador)
+        response.headers['Permissions-Policy'] = 'identity-credentials-get=()' 
+        return response
+    CORS(
+        app, 
+        # Añadimos la IP de la red por si el navegador la usa
+        resources={r"/*": {"origins": [
+            "https://localhost:5173", 
+            "https://127.0.0.1:5173",
+            "https://192.168.0.110:5173" 
+        ]}},
+        allow_headers=["Content-Type", "Authorization"], 
+        supports_credentials=True, 
+        methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    )
     
     # 1. Cargar la configuración
     app.config.from_object(config_class)
@@ -62,5 +78,14 @@ def create_app(config_class=Config):
 app = create_app()
 
 if __name__ == "__main__":
-    # Usamos el modo de ejecución directo (python app.py) en lugar de 'flask run'.
-    app.run(debug=True)
+    try:
+        app.run(
+            debug=True, 
+            host='0.0.0.0', 
+            port=5000, 
+            ssl_context=('cert.crt', 'cert.key') # 🌟 USAR TUS CERTIFICADOS
+        )
+    except FileNotFoundError:
+        print("🚨 ERROR: Asegúrate de que los archivos 'cert.crt' y 'cert.key' estén en la misma carpeta que 'app.py'.")
+    except Exception as e:
+        print(f"Error al iniciar el servidor Flask: {e}")

@@ -10,7 +10,7 @@ const Tienda = () => {
 
   // 2. Estado para almacenar los productos de la API
   const [productos, setProductos] = useState([]);
-  const API_URL = "http://localhost:5000/productos"; // Asegúrate de que esta URL sea correcta
+  const API_URL = "https://localhost:5000/productos"; // Asegúrate de que esta URL sea correcta
 
   // 3. Lógica para cargar productos al montar el componente
   useEffect(() => {

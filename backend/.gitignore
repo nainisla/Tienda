@@ -1,0 +1,28 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+
+# Dependencias
+*.egg-info/
+*.egg
+
+# Archivos de logs
+*.log
+
+# Archivos temporales o de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración locales
+.env
+*.sqlite3
+
+# Node / Vite
+node_modules/
+dist/
+.vite/

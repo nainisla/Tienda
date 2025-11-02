@@ -1,4 +1,3 @@
-from app import db # Importamos la instancia db creada en app.py
 from extensions import db
 from datetime import datetime, date
 
@@ -22,6 +21,7 @@ class User(db.Model):
     name = db.Column(db.String(100), nullable=True) 
     # Usado para identificar usuarios de Google y evitar duplicados.
     google_id = db.Column(db.String(200), unique=True, nullable=True) 
+    facebook_id = db.Column(db.String(200), unique=True, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):

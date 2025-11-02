@@ -79,7 +79,7 @@ function App() {
     // 2. Cargar productos (Esta lógica debe ir en Tienda.jsx si App.jsx es solo el layout)
     // Dejo el código aquí, pero el renderizado de productos debe estar en Tienda.jsx
     axios
-      .get("http://127.0.0.1:5000/productos")
+      .get("https://127.0.0.1:5000/productos")
       .then((res) => setProductos(res.data))
       .catch((err) => console.error("Error al cargar productos:", err));
   }, []);

@@ -4,11 +4,28 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import FacebookLogin from "./FacebookLogin.jsx"; // Componente FacebookLogin
+
+const API_BASE_URL = "https://localhost:5000";
 
 const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  // ----------------------------------------------------------------------
+  // 🟢 FUNCIÓN DE ÉXITO UNIFICADA para Google, Facebook y Login Tradicional
+  // ----------------------------------------------------------------------
+  const handleLoginSuccess = ({ access_token, role }) => {
+    localStorage.setItem("userToken", access_token);
+    localStorage.setItem("userRole", role);
+    setIsLoggedIn(true); 
+    setUserRole(role); 
+    handleClose();
+    console.log("Login exitoso. Token y rol guardados.");
+  }
+  // ----------------------------------------------------------------------
+
 
   // ===============================================
   // 1. LÓGICA DE LOGIN TRADICIONAL (EMAIL/CONTRASEÑA)
@@ -25,21 +42,12 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
     console.log("Intentando login tradicional con:", { email, password });
 
     axios
-      .post("http://127.0.0.1:5000/auth/login", { email, password })
+      .post(`${API_BASE_URL}/auth/login`, { email, password })
       .then((res) => {
-        localStorage.setItem("userToken", res.data.access_token); // ⬅️ GUARDAR TOKEN
-        localStorage.setItem("userRole", res.data.role);
-        setIsLoggedIn(true); // ⬅️ Actualizar estado de App.jsx
-        setUserRole(res.data.role); // ⬅️ Actualizar rol
-        handleClose(); // Cerrar modal
-        console.log("Login tradicional exitoso:", res.data);
-        // Manejo exitoso: almacenar token, actualizar estado de autenticación.
-        console.log("Login exitoso:", res.data);
-        // localStorage.setItem('userToken', res.data.access_token);
-        handleClose(); // Cerrar el modal al iniciar sesión
+        // 🟢 Usamos la función unificada para manejar el éxito
+        handleLoginSuccess(res.data);
       })
       .catch((err) => {
-        // Manejo de error: credenciales incorrectas o error de servidor.
         console.error("Error en login tradicional:", err);
         setError(
           "Credenciales incorrectas o error de servidor. Intenta de nuevo."
@@ -50,8 +58,6 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
   // ===============================================
   // 2. LÓGICA DE LOGIN CON GOOGLE
   // ===============================================
-
-  // Función que se ejecuta cuando Google envía la credencial JWT exitosamente
   const handleGoogleSuccess = (response) => {
     console.log(
       "Login con Google exitoso. Enviando credencial a Flask...",
@@ -59,18 +65,13 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
     );
     const googleToken = response.credential;
 
-    // 🚨 Llamada a la API Flask para verificar y autenticar con token de Google
     axios
-      .post("http://127.0.0.1:5000/auth/google", {
+      .post(`${API_BASE_URL}/auth/google`, {
         token: googleToken,
       })
       .then((res) => {
-        localStorage.setItem("userToken", res.data.access_token); // ⬅️ GUARDAR TOKEN
-        localStorage.setItem("userRole", res.data.role);
-        setIsLoggedIn(true); // ⬅️ Actualizar estado de App.jsx
-        setUserRole(res.data.role); // ⬅️ Actualizar rol
-        console.log("Login con Google exitoso:", res.data);
-        handleClose(); // Cerrar el modal al iniciar sesión
+        // 🟢 Usamos la función unificada para manejar el éxito
+        handleLoginSuccess(res.data);
       })
       .catch((err) => {
         console.error("Error al enviar el token a Flask:", err);
@@ -91,9 +92,7 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
   // ===============================================
 
   return (
-    // Usamos el componente Modal de React-Bootstrap
     <Modal show={show} onHide={handleClose} centered>
-      {/* Cabecera, similar a "adiclub INICIÁ SESIÓN" */}
       <Modal.Header closeButton className="d-block text-center border-0 pb-0">
         <Modal.Title as="h2" className="fw-bold">
           INICIÁ SESIÓN O REGISTRATE
@@ -104,23 +103,28 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
         <p className="text-center text-muted">
           Disfrutá de acceso exclusivo a productos, experiencias, ofertas y más.
         </p>
+        
+        {/* 🚨 ZONA DE BOTONES SOCIALES CORREGIDA 🚨 */}
+        <div className="d-flex justify-content-center mb-4 align-items-center">
+            
+            {/* 1. FACEBOOK LOGIN */}
+            {/* ✅ CRÍTICO: Usamos flex-fill para ancho 50% y justify-content-center para centrar el botón */}
+            <div className="flex-fill me-2 d-flex justify-content-center" style={{ position: 'relative', top: '0.5px' }}> 
+                <FacebookLogin 
+                    onLoginSuccess={handleLoginSuccess}
+                />
+            </div>
 
-        {/* Botones de Login Social (Apple, Facebook, Google) */}
-        <div className="d-flex justify-content-center mb-4">
-          <Button variant="outline-dark" className="me-2">
-            
-          </Button>
-          <Button variant="outline-primary" className="me-2">
-            f
-          </Button>
-
-          {/* 🚨 COMPONENTE REAL DE GOOGLE LOGIN 🚨 */}
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleFailure}
-            theme="outline"
-            size="large"
-          />
+            {/* 2. GOOGLE LOGIN */}
+            {/* ✅ CRÍTICO: Usamos flex-fill para ancho 50% y justify-content-center para centrar el botón */}
+            <div className="flex-fill ms-2 d-flex justify-content-center">
+                <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={handleGoogleFailure}
+                    theme="outline"
+                    size="large" // Esto le da una altura compatible
+                />
+            </div>
         </div>
 
         {/* Separador visual */}
@@ -176,7 +180,6 @@ const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
 
         {/* Enlace para recordar contraseña o registrarse */}
         <div className="text-center mt-3">
-          {/* Usamos 'a' en lugar de 'Link' */}
           <a
             href="#"
             onClick={handleClose}

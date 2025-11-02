@@ -6,6 +6,13 @@ from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from datetime import timedelta
 from functools import wraps
+import requests
+
+FACEBOOK_APP_ID = "2407087869688104"
+FACEBOOK_APP_SECRET = "03880b423a19709e27d2048e86b2d3d4"
+
+# El token de aplicación se forma combinando el ID y el Secreto
+FACEBOOK_APP_TOKEN = f"{FACEBOOK_APP_ID}|{FACEBOOK_APP_SECRET}"
 
 def admin_required():
     """Decorador para asegurar que solo los usuarios con rol 'admin' puedan acceder."""
@@ -37,6 +44,81 @@ def register_routes(app):
         "user@lumine.com": {"password": "password123", "role": "user"},
     }
     
+    @app.route("/auth/facebook", methods=["POST"])
+    def facebook_auth():
+     data = request.json
+     access_token = data.get("accessToken")
+
+     if not access_token:
+        return jsonify({"mensaje": "No se proporcionó token de acceso de Facebook"}), 400
+
+     try:
+        # 1. Inspección/Validación del Token con Facebook
+         validation_url = f"https://graph.facebook.com/debug_token?input_token={access_token}&access_token={FACEBOOK_APP_TOKEN}"
+        
+         params = {
+              "input_token": access_token,       # Token del usuario
+              "access_token": FACEBOOK_APP_TOKEN  # Token de la aplicación
+         }
+        # Hacemos la petición a Facebook
+         validation_response = requests.get(validation_url)
+         validation_data = validation_response.json()
+
+        # Verifica si la respuesta es válida y pertenece a tu app
+         if not validation_data.get("data") or not validation_data["data"]["is_valid"] or validation_data["data"]["app_id"] != FACEBOOK_APP_ID:
+             return jsonify({"mensaje": "Token de Facebook inválido o expirado."}), 401
+
+         facebook_user_id = validation_data["data"]["user_id"]
+        
+        # 2. Obtener datos básicos del perfil (para obtener el email)
+         profile_url = f"https://graph.facebook.com/me?fields=id,name,email&access_token={access_token}"
+         profile_response = requests.get(profile_url)
+         profile_data = profile_response.json()
+
+         user_email = profile_data.get("email") # Puede ser None si el usuario no dio permiso
+         user_name = profile_data.get("name")
+        
+        # 3. Buscar o Crear Usuario en tu Base de Datos
+        # Busca por el ID de Facebook
+         user = User.query.filter_by(facebook_id=facebook_user_id).first()
+        
+        # Si no existe, créalo
+         if not user:
+            # Si el email está disponible, úsalo. Si no, usa el ID de Facebook.
+             email_for_db = user_email if user_email else f"fb_{facebook_user_id}@temp.com"
+            
+            # Intenta encontrar por email si el ID no estaba. (Caso de migración)
+             user = User.query.filter_by(email=email_for_db).first()
+
+             if not user:
+                # El usuario es completamente nuevo
+                 user = User(
+                     facebook_id=facebook_user_id,
+                     email=email_for_db,
+                     name=user_name,
+                 )
+                 db.session.add(user)
+             else:
+                 # El usuario ya existía con ese email (ej. Google)
+                 user.facebook_id = facebook_user_id # Lo vinculamos
+            
+             db.session.commit()
+
+        # 4. Generar Token JWT de Sesión
+        # Usamos el email del usuario para crear el token de acceso
+         access_token = create_access_token(identity=user.email, expires_delta=timedelta(days=7))
+
+         return jsonify({
+             "mensaje": "Inicio de sesión con Facebook exitoso.",
+             "access_token": access_token,
+             "user_id": user.id,
+             "user_email": user.email
+         })
+
+     except Exception as e:
+         db.session.rollback()
+         print(f"Error en la autenticación de Facebook: {e}")
+         return jsonify({"mensaje": f"Error interno en la autenticación: {e}"}), 500
     # ----------------------------------------------------
     # RUTAS DE AUTENTICACIÓN
     # ----------------------------------------------------
@@ -240,3 +322,5 @@ def register_routes(app):
         except Exception:
             db.session.rollback()
             return jsonify({"error": "Error interno al agregar producto"}), 500
+
+
