@@ -4,54 +4,45 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import FacebookLogin from "./FacebookLogin.jsx"; // Componente FacebookLogin
+import FacebookLogin from "./FacebookLogin.jsx"; 
+import { useAuth } from "../context/AuthContext.jsx";
 
 const API_BASE_URL = "https://localhost:5000";
 
-const LoginModal = ({ show, handleClose, setIsLoggedIn, setUserRole }) => {
+const LoginModal = ({ show, handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { handleLogin } = useAuth();
 
   // ----------------------------------------------------------------------
   // 🟢 FUNCIÓN DE ÉXITO UNIFICADA para Google, Facebook y Login Tradicional
   // ----------------------------------------------------------------------
   const handleLoginSuccess = ({ access_token, role }) => {
-    localStorage.setItem("userToken", access_token);
-    localStorage.setItem("userRole", role);
-    setIsLoggedIn(true); 
-    setUserRole(role); 
+    // 🚨 Llamar a la función del contexto
+    handleLogin({ access_token, role }); 
     handleClose();
     console.log("Login exitoso. Token y rol guardados.");
   }
-  // ----------------------------------------------------------------------
-
-
   // ===============================================
   // 1. LÓGICA DE LOGIN TRADICIONAL (EMAIL/CONTRASEÑA)
   // ===============================================
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-
-    if (email === "" || password === "") {
-      setError("Por favor, completa ambos campos.");
-      return;
-    }
-
-    console.log("Intentando login tradicional con:", { email, password });
-
+    // ...
     axios
-      .post(`${API_BASE_URL}/auth/login`, { email, password })
+      .post(`${API_BASE_URL}/auth/login`, {
+        email: email,
+        password: password,
+      })
       .then((res) => {
-        // 🟢 Usamos la función unificada para manejar el éxito
-        handleLoginSuccess(res.data);
+        const { session_token, user_role } = res.data;
+        // 🟢 Llamar a la función unificada
+        handleLoginSuccess({ access_token: session_token, role: user_role }); 
       })
       .catch((err) => {
-        console.error("Error en login tradicional:", err);
-        setError(
-          "Credenciales incorrectas o error de servidor. Intenta de nuevo."
-        );
+        // ...
       });
   };
 

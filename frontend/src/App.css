@@ -1,3 +1,144 @@
+/* ... CÓDIGO ANTERIOR ... */
+
+/* ----------------------------------------------------------------- */
+/* ESTILOS DE LA TIENDA (PRODUCTOS Y CATEGORÍAS) */
+/* ----------------------------------------------------------------- */
+
+.product-card-new {
+  border: none !important;
+  text-align: left;
+  /* El fondo de la tarjeta puede ser gris claro como en la imagen */
+  background-color: #f7f7f7; 
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.product-card-new:hover {
+  transform: translateY(-5px); /* Pequeño levantamiento al pasar el ratón */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-card-new .card-img-top {
+  border-radius: 8px 8px 0 0;
+  height: auto; /* Mantener la proporción */
+}
+
+/* Estilos para el botón de favorito */
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white; /* Fondo blanco para destacar */
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  color: #444; 
+  z-index: 10;
+  padding: 8px; /* Reducido para que sea un círculo pequeño */
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  outline: none !important;
+}
+
+.favorite-button:hover {
+  background-color: #eee;
+}
+
+.price-tag {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  color: #000;
+}
+
+.current-price {
+  color: black;
+  margin-right: 10px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-right: 10px;
+}
+
+.discount-badge {
+  background-color: #ffd700; /* Dorado para destacar */
+  color: black;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.3;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 0.25rem;
+  height: 2.6em; /* Altura fija para 2 líneas */
+  overflow: hidden;
+}
+
+/* ----------------------------------------------------------------- */
+/* 🟢 NUEVOS ESTILOS PARA LA BARRA DE CATEGORÍAS */
+/* ----------------------------------------------------------------- */
+
+.category-list {
+  display: flex; /* Para que los elementos se alineen horizontalmente */
+  gap: 15px; /* Espacio entre los elementos de la lista */
+  padding-left: 0;
+  margin-bottom: 3rem; /* Más espacio entre las categorías y los productos */
+  overflow-x: auto; /* Permite el desplazamiento horizontal en móvil */
+  white-space: nowrap; /* Evita que los elementos se envuelvan */
+}
+
+.category-item {
+  display: inline-flex; /* Asegura que el padding funcione bien */
+  align-items: center;
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px; /* Bordes redondeados tipo chip */
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: white;
+}
+
+.category-item:hover {
+  border-color: black;
+  color: black;
+  background-color: #f0f0f0;
+}
+
+.category-item.active {
+  /* Estilo para la categoría seleccionada (ej. TODOS) */
+  border-color: black;
+  background-color: black;
+  color: white;
+  font-weight: 700;
+}
+
+/* Estilo para el ícono de 'Ver todo' */
+.category-item svg {
+  margin-left: 8px;
+}
+/* ----------------------------------------------------------------- */
+
+
+/* ... CÓDIGO POSTERIOR ... */
 /* Estilos para el Carrusel */
 .product-carousel-container {
   display: flex; /* Muestra los elementos en línea */

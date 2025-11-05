@@ -1,5 +1,3 @@
-// CartView.jsx (Modificado)
-import React from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { FaTrashAlt, FaMinus, FaPlus } from "react-icons/fa"; // ⬅️ Íconos necesarios
@@ -19,7 +17,6 @@ const CartView = () => {
   };
 
   if (cartItems.length === 0) {
-    // ... (Vista de carrito vacío se mantiene igual)
     return (
       <div className="container mt-5 text-center">
         <h2 className="mb-4">🛍️ Tu Carrito está Vacío</h2>
@@ -127,9 +124,18 @@ const CartView = () => {
               IVA incluido ${((totalPrice * 0.21) / 1.21).toFixed(2)}{" "}
             </p>{" "}
             {/* Simulación de IVA 21% */}
-            <button className="checkout-button w-100 mt-3">
+            {/* 🟢 CLAVE: Reemplazamos el <button> por <Link> */}
+            <Link
+              to="/checkout"
+              className="checkout-button w-100 mt-3"
+              // Deshabilita visualmente el enlace si el carrito está vacío
+              style={{
+                pointerEvents: cartItems.length === 0 ? "none" : "auto",
+                opacity: cartItems.length === 0 ? 0.6 : 1,
+              }}
+            >
               FINALIZAR COMPRA
-            </button>
+            </Link>
             <hr className="my-4" />
             <p className="text-center small">
               Compra en **6 CUOTAS SIN INTERÉS** si superas los $149.999.
