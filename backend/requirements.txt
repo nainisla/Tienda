@@ -5,3 +5,6 @@ Flask-JWT-Extended
 google-auth
 google-auth-oauthlib
 requests
+pytest
+pytest-cov
+faker
