@@ -2,16 +2,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { CartProvider } from "./CartContext.jsx"; // ⬅️ Correcto: importado
-import CartView from "./CartView.jsx";
-
-// 1. Importamos React Router
+import { CartProvider } from "./context/CartContext.jsx"; // ⬅️ Correcto: importado
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-
-// 2. Importamos los componentes de la aplicación
-import App from "./App.jsx"; // La tienda principal
-import AdminPanel from "./AdminPanel.jsx"; // ⬅️ Asegúrate de crear este archivo
+import { FavoritesProvider } from "./context/FavoritesContext.jsx";
+import FavoritesView from "./pages/FavoritesView.jsx";
+import App from "./components/App.jsx"; // La tienda principal
+import AdminPanel from "./pages/AdminPanel.jsx"; // ⬅️ Asegúrate de crear este archivo
+import CartView from "./pages/CartView.jsx";
+import Tienda from "./pages/Tienda.jsx";
 // 🚨 ID DE CLIENTE REAL 🚨
 const GOOGLE_CLIENT_ID =
   "194126254993-92flod7jf0859g80vactvoao3s5e4u09.apps.googleusercontent.com";
@@ -20,29 +19,41 @@ const GOOGLE_CLIENT_ID =
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, // Ruta principal: http://localhost:5173/
-  },
-  {
-    path: "/admin",
-    element: <AdminPanel />, // Ruta del panel: http://localhost:5173/admin
-  },
-  {
-    path: "/carrito", // ⬅️ NUEVA RUTA
-    element: <CartView />, // ⬅️ VISTA DEL CARRITO
-  },
-]);
+    element: <App />,
+    children: [
+      {
+        index: true, 
+        element: <Tienda />, 
+      },
+      {
+        path: "admin", 
+        element: <AdminPanel />, 
+      },
+      {
+        path: "carrito", 
+        element: <CartView />,
+      }, 
+      {
+        path: "favoritos", // ⬅️ NUEVA RUTA
+        // 🟢 CORRECCIÓN: Se quita la prop 'todosLosProductos={}'
+        element: <FavoritesView />, 
+      },
+    ], 
+  }, 
+]); 
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-        {/* 🚨 4. Envolvemos toda la aplicación con el Provider de Google */}
-       {" "}
+        {" "}
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-      {/* 🟢 CORRECCIÓN: CartProvider debe envolver al RouterProvider */}
+      {/* 🟢 CLAVE: Envolvemos al RouterProvider con ambos Contextos */}
       <CartProvider>
-              <RouterProvider router={router} />
+        <FavoritesProvider> {/* ⬅️ AÑADIDO */}
+                <RouterProvider router={router} />
+        </FavoritesProvider> {/* ⬅️ AÑADIDO */}
       </CartProvider>
-         {" "}
+         {" "}
     </GoogleOAuthProvider>
-     {" "}
+     {" "}
   </StrictMode>
 );

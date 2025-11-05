@@ -1,3 +1,98 @@
+/* Estilos para el Carrusel */
+.product-carousel-container {
+  display: flex; /* Muestra los elementos en línea */
+  overflow-x: scroll; /* Permite el desplazamiento horizontal */
+  scroll-behavior: smooth;
+  padding-bottom: 20px; /* Espacio para la barra de desplazamiento */
+  /* Opcional: Ocultar la barra de desplazamiento en navegadores */
+}
+
+.carousel-item-wrapper {
+  flex: 0 0 auto; /* No crecer, no encoger, ancho automático */
+  width: 300px; /* Ancho fijo para cada tarjeta, similar a col-md-4 */
+  margin-right: 15px;
+  position: relative;
+  /* Asegúrate de que la tarjeta no tenga sombra o bordes extraños */
+}
+
+/* Estilos de la Tarjeta */
+.product-card-new {
+  border: none !important;
+  text-align: left;
+  /* El fondo de la tarjeta puede ser gris claro como en la imagen */
+  background-color: #f7f7f7; 
+}
+
+/* Estilos para el botón de favorito */
+.favorite-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: #444; 
+  z-index: 10;
+  padding: 10px; 
+  cursor: pointer;
+  transition: all 0.2s ease-in-out; /* 🚨 Cambiado a 'all' para transicionar el color y el fondo */
+  
+  outline: none !important; 
+  box-shadow: none !important;
+  /* Asegúrate de que el corazón esté centrado si el padding es alto */
+}
+
+/* 🟢 CLAVE: ESTADO AL PASAR EL MOUSE (EFECTO INVITACIÓN) */
+.favorite-button:hover,
+.favorite-button:focus {
+    /* Mantiene el color negro para el ícono */
+    color: black !important; 
+    
+    /* 🚨 NUEVO: FONDO GRIS MUY SUTIL Y CIRCULAR */
+    background: rgba(0, 0, 0, 0.08) !important; /* Gris muy transparente */
+    border-radius: 50%; /* Esto crea el círculo */
+    
+    /* Mantiene la eliminación del contorno */
+    outline: 0 !important; 
+    box-shadow: none !important;
+}
+
+/* Mantenemos el estado activo para cuando se presiona y se mantiene */
+.favorite-button:active {
+    /* Al presionar, el color puede ser más fuerte */
+    background: rgba(0, 0, 0, 0.15) !important; 
+    outline: 0 !important;
+    box-shadow: none !important;
+}
+/* Estilos para el Precio (Diseño Adidas) */
+.price-tag {
+  margin-bottom: 5px;
+  line-height: 1;
+}
+
+.current-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: red; /* Precio en rojo por el descuento */
+  margin-right: 10px;
+}
+
+.original-price {
+  font-size: 0.9rem;
+  color: #777;
+  text-decoration: line-through; /* Tachado */
+}
+
+.discount-badge {
+  font-size: 0.8rem;
+  color: red;
+  font-weight: bold;
+}
+
+.product-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
 .cart-item-card {
   border: none;
   border-radius: 0; /* Bordes rectos como Adidas */

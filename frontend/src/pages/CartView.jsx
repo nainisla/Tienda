@@ -1,7 +1,7 @@
 // CartView.jsx (Modificado)
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "./CartContext";
+import { useCart } from "../context/CartContext";
 import { FaTrashAlt, FaMinus, FaPlus } from "react-icons/fa"; // ⬅️ Íconos necesarios
 
 const CartView = () => {
