@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { FaTrashAlt, FaMinus, FaPlus } from "react-icons/fa"; 
 
-const API_BASE_URL = "https://127.0.0.1:5000";
+const API_BASE_URL = "https://localhost:5000";
 
 const CartView = () => {
   // ✅ CLAVE: Destructuramos la función updateQuantity que viene del contexto

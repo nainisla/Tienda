@@ -1,18 +1,31 @@
-from flask import jsonify, request
-from extensions import db
+from flask import jsonify, request, send_from_directory
+from extensions import db , ma
 from models import Producto, User
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, verify_jwt_in_request
 from google.oauth2 import id_token
 from google.auth.transport import requests as google_requests
 from datetime import timedelta
 from functools import wraps
-import requests
+import requests 
 
 FACEBOOK_APP_ID = "2407087869688104"
 FACEBOOK_APP_SECRET = "03880b423a19709e27d2048e86b2d3d4"
 
 # El token de aplicación se forma combinando el ID y el Secreto
 FACEBOOK_APP_TOKEN = f"{FACEBOOK_APP_ID}|{FACEBOOK_APP_SECRET}"
+
+class ProductoSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Producto
+        # Cargar la instancia permite que el objeto devuelto sea un objeto de Producto, 
+        # aunque para GET /productos es opcional.
+        load_instance = True
+        # Aseguramos que se carguen las propiedades del modelo (id, nombre, precio, etc.)
+        include_fk = True 
+
+# Instancia para un solo producto (singular) y para una lista de productos (many=True)
+producto_schema = ProductoSchema()
+productos_schema = ProductoSchema(many=True)
 
 def admin_required():
     """Decorador para asegurar que solo los usuarios con rol 'admin' puedan acceder."""
@@ -44,6 +57,12 @@ def register_routes(app):
         "user@lumine.com": {"password": "password123", "role": "user"},
     }
     
+    @app.route("/productos", methods=["GET"])
+    def obtener_productos():
+        productos = Producto.query.all()
+        resultado = productos_schema.dump(productos)
+        return jsonify(resultado)
+
     @app.route("/auth/facebook", methods=["POST"])
     def facebook_auth():
      data = request.json
@@ -250,23 +269,6 @@ def register_routes(app):
     # ----------------------------------------------------
     # RUTAS DE PRODUCTOS
     # ----------------------------------------------------
-
-    # --- Listar todos los productos (GET /productos) ---
-    @app.route("/productos", methods=["GET"])
-    def obtener_productos():
-        productos = Producto.query.all()
-        productos_lista = [
-            {
-                "id": p.id,
-                "nombre": p.nombre,
-                "precio": p.precio,
-                "imagen": p.imagen,
-                "descripcion": p.descripcion,
-            }
-            for p in productos
-        ]
-        return jsonify(productos_lista)
-
     # --- Obtener un producto por ID (GET /productos/<id>) ---
     @app.route("/productos/<int:id>", methods=["GET"])
     def obtener_producto(id):

@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import { useFavorites } from "../context/FavoritesContext";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
-const API_BASE_URL = "https://127.0.0.1:5000";
+const API_BASE_URL = "https://localhost:5000";
 
 // Componente de Botón de Favoritos
 const FavoriteButton = ({ productId }) => {

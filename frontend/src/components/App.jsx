@@ -46,7 +46,7 @@ function App() {
   useEffect(() => {
     // 2. Cargar productos
     axios
-      .get("https://127.0.0.1:5000/productos")
+      .get("https://localhost:5000/productos")
       .then((res) => setProductos(res.data))
       .catch((err) => console.error("Error al cargar productos:", err));
       

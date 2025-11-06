@@ -13,14 +13,14 @@ const LoginModal = ({ show, handleClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { handleLogin } = useAuth();
+  const { handleLoginSuccess: updateAuthContext } = useAuth();
 
   // ----------------------------------------------------------------------
   // 🟢 FUNCIÓN DE ÉXITO UNIFICADA para Google, Facebook y Login Tradicional
   // ----------------------------------------------------------------------
   const handleLoginSuccess = ({ access_token, role }) => {
-    // 🚨 Llamar a la función del contexto
-    handleLogin({ access_token, role }); 
+    // 🚨 Llamar a la función del contexto (con el alias)
+    updateAuthContext({ access_token, role }); // <-- ESTE ES EL LLAMADO CORREGIDO
     handleClose();
     console.log("Login exitoso. Token y rol guardados.");
   }

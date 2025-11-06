@@ -6,7 +6,6 @@ import { useFavorites } from "../context/FavoritesContext";
 
 // 🚨 Asegúrate de que esta URL base sea accesible por HTTPS
 const API_BASE_URL = "https://localhost:5000";
-
 // ====================================================================
 // 💡 Componente del Botón de Favoritos (Se mantiene igual)
 // ====================================================================

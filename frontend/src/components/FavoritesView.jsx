@@ -4,7 +4,7 @@ import { useFavorites } from "../context/FavoritesContext";
 import { useCart } from "../context/CartContext";
 import { FaHeart, FaShoppingBag } from "react-icons/fa";
 
-const API_BASE_URL = "https://127.0.0.1:5000";
+const API_BASE_URL = "https://localhost:5000";
 
 const FavoritesView = () => {
   const { favoriteItems, toggleFavorite } = useFavorites();

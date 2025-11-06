@@ -8,3 +8,5 @@ requests
 pytest
 pytest-cov
 faker
+flask-marshmallow  # Faltaba en tu lista original
+marshmallow-sqlalchemy # El que te faltaba ahora
