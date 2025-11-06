@@ -16,19 +16,19 @@ def inicializar_db(app):
                 Producto(
                  nombre="Remera Básica Blanca Hombre",
                  precio=19.99,
-                 imagen="/static/image/hombre.png",
+                 imagen="image/hombre.png",
                  descripcion="Remera de algodón blanca de manga corta, ideal para el uso diario. Corte clásico y tejido suave."
             ),
                 Producto(
                  nombre="Buzo de Algodón Gris Hombre",
                  precio=45.00,
-                 imagen="/static/image/hombre1.webp",
+                 imagen="image/hombre1.webp",
                  descripcion="Buzo de manga larga color gris oscuro, con cuello redondo y tejido cálido. Perfecto para media estación."
             ),
                 Producto(
                  nombre="Remera Manga Larga Blanca Hombre",
                  precio=29.99,
-                 imagen="/static/image/hombre2.jpg",
+                 imagen="image/hombre2.jpg",
                  descripcion="Remera blanca de manga larga confeccionada en algodón. Comodidad y estilo casual para todos los días."
             ),
 
@@ -38,13 +38,13 @@ def inicializar_db(app):
                 Producto(
                  nombre="Suéter Rayado Beige Mujer",
                  precio=59.99,
-                 imagen="/static/image/mujer.webp",
+                 imagen="image/mujer.webp",
                  descripcion="Suéter tejido con rayas marinas sobre fondo beige. Diseño moderno y confortable para el invierno."
             ),
                 Producto(
                  nombre="Buzo Beige de Lana Mujer",
                  precio=64.50,
-                 imagen="/static/image/mujer2.webp",
+                 imagen="image/mujer2.webp",
                  descripcion="Buzo de lana color crema, corte holgado y textura suave. Ideal para días fríos con estilo."
             ),
 
@@ -54,19 +54,19 @@ def inicializar_db(app):
                 Producto(
                  nombre="Remera Blanca Niño",
                  precio=15.99,
-                 imagen="/static/image/niño.webp",
+                 imagen="image/niño.webp",
                  descripcion="Remera básica blanca de algodón para niños. Suave, liviana y perfecta para el uso escolar."
             ),
                 Producto(
                  nombre="Pantalón Deportivo Rojo Niño",
                  precio=25.00,
-                 imagen="/static/image/niño2.avif",
+                 imagen="image/niño2.avif",
                  descripcion="Pantalón deportivo rojo con cintura elástica. Cómodo y resistente para jugar y hacer deporte."
             ),
                 Producto(
                  nombre="Remera Negra Niño",
                  precio=17.50,
-                 imagen="/static/image/niño3.webp",
+                 imagen="image/niño3.webp",
                  descripcion="Remera básica negra para niños, de algodón y corte regular. Ideal para combinar con cualquier look."
             )
 

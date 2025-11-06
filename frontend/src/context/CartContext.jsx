@@ -7,6 +7,20 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   // Estado para almacenar los productos en el carrito: [{id, nombre, precio, cantidad}]
   const [cartItems, setCartItems] = useState([]);
+  const updateQuantity = (productId, newQuantity) => {
+    // 1. Asegurarse de que la nueva cantidad sea válida
+    if (newQuantity < 1) {
+      // Si la cantidad es 0 o menos, simplemente removemos el producto
+      removeFromCart(productId); 
+      return;
+    }
+
+    setCartItems((prevItems) => 
+      prevItems.map((item) =>
+        item.id === productId ? { ...item, cantidad: newQuantity } : item
+      )
+    );
+  };
 
   // --- Función Principal: Agregar/Actualizar Producto ---
   const addToCart = (product) => {
@@ -46,6 +60,7 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     clearCart,
+    updateQuantity,
     // Opcional: Calcular el total de artículos
     totalItems: cartItems.reduce((acc, item) => acc + item.cantidad, 0),
     // Opcional: Calcular el costo total
@@ -55,7 +70,9 @@ export const CartProvider = ({ children }) => {
   };
 
   return (
-    <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
+    <CartContext.Provider value={contextValue}>
+      {children}
+    </CartContext.Provider>
   );
 };
 

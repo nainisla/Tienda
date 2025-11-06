@@ -4,6 +4,8 @@ import { useCart } from "../context/CartContext";
 import { useFavorites } from "../context/FavoritesContext";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 
+const API_BASE_URL = "https://127.0.0.1:5000";
+
 // Componente de Botón de Favoritos
 const FavoriteButton = ({ productId }) => {
   const { isFavorite, toggleFavorite } = useFavorites(); 
@@ -31,6 +33,7 @@ const FavoriteButton = ({ productId }) => {
 
 const ProductCard = ({ producto }) => {
   const { addToCart } = useCart();
+  const fullImageUrl = `${API_BASE_URL}/static/${producto.imagen}`;
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -44,7 +47,8 @@ const ProductCard = ({ producto }) => {
         <FavoriteButton productId={producto.id} />
 
         <img 
-          src={producto.imagen || 'https://via.placeholder.com/300x400?text=Lumine+Product'} 
+          // 🚨 AHORA SOLO USAMOS fullImageUrl
+          src={fullImageUrl || 'https://via.placeholder.com/300x400?text=Lumine+Product'} 
           className="card-img-top" 
           alt={producto.nombre} 
         />

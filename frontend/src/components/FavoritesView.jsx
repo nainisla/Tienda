@@ -4,6 +4,8 @@ import { useFavorites } from "../context/FavoritesContext";
 import { useCart } from "../context/CartContext";
 import { FaHeart, FaShoppingBag } from "react-icons/fa";
 
+const API_BASE_URL = "https://127.0.0.1:5000";
+
 const FavoritesView = () => {
   const { favoriteItems, toggleFavorite } = useFavorites();
   // 🟢 CLAVE: Obtener los productos cargados en App.jsx
@@ -46,7 +48,12 @@ const FavoritesView = () => {
                 <FaHeart size={20} style={{ color: "black" }} />
               </button>
 
-              <img src={p.imagen} className="card-img-top" alt={p.nombre} />
+              <img 
+                 // ✅ SOLUCIÓN: Concatenación manual para incluir el directorio "static"
+                 src={`${API_BASE_URL}/static/${p.imagen}`} 
+                 className="card-img-top" 
+                 alt={p.nombre} 
+              />
 
               <div className="card-body text-start">
                 <p className="price-tag">
