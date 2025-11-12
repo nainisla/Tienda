@@ -1,0 +1,2 @@
+{"/home/etec/Documentos/Tienda/frontend/src/components/HelloWorld.jsx": {"path":"/home/etec/Documentos/Tienda/frontend/src/components/HelloWorld.jsx","statementMap":{"0":{"start":{"line":2,"column":2},"end":{"line":2,"column":null}}},"fnMap":{"0":{"name":"HelloWorld","decl":{"start":{"line":1,"column":24},"end":{"line":1,"column":35}},"loc":{"start":{"line":1,"column":45},"end":{"line":3,"column":null}},"line":1}},"branchMap":{},"s":{"0":1},"f":{"0":1},"b":{},"meta":{"lastBranch":0,"lastFunction":1,"lastStatement":1,"seen":{"f:1:24:1:35":0,"s:2:2:2:Infinity":0}}}
+}

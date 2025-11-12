@@ -11,4 +11,14 @@ export default defineConfig({
     },
     port: 5173,
   },
+  test: {
+    globals: true, // Permite usar 'describe', 'it', 'expect' globalmente (como Jest)
+    environment: "jsdom", // 👈 AHORA EN LA UBICACIÓN CORRECTA
+    setupFiles: "./tests/setupTests.js", // Carga los matchers de @testing-library/jest-dom
+    // Opcional: Para el reporte de cobertura
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+    },
+  },
 });
